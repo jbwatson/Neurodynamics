@@ -1,48 +1,77 @@
-function GenerateQ1Network( P )
-% Generates network of Izhikevich neurons with 1 layer of excitatory
-% and 1 layer of inhibitory neurons.
+function ExToEx = GenerateQ1Network( P )
 
 % Parameters
-numModules = 8;
-numNeuronPerModule = 100;
-numConnectPerModule = 1000;
+numExModules = 8;
+numExPerModule = 100;
+numExEdgesPerModule = 1000;
+numExTotal = numExModules * numExPerModule;
 
-numExcitatory = numModules * numNeuronPerModule;
-numInhibitory = 200;
+numInModules = 1;
+numInPerModule = 200;
 
 
-% Start to build dtata structure for network (2x1 cell array)
-% Labels
-Excitatory = 1;
-Inhibitory = 2;
+% Generate Connection Matrix for Excitatory->Excitatory connections
 
-Network{Excitatory}.rows = numExcitatory;
-Network{Excitatory}.columns = 1;
-Network{Inhibitory}.rows = numInhibitory;
-Network{Inhibitory}.columns = 1;
+ExToEx = zeros(numExTotal,numExTotal);
 
-% Build empty connectivity matrices
-% layer{i}.S{j} is the connectivity matrix from layer j to layer i
-% (same notation as IzNeuronUpdate)
-numLayers = length (network);
-for i=1:numLayers
-   for j=1:numLayers
-      Network{i}.S{j} = [];
-   end
+% For each module make 1000 random connections
+for i = 0 : (numExModules - 1)
+    
+    offset = i * numExPerModule;
+    
+    for j = 1 : 1000
+       startNeuron = randi(numExPerModule); 
+       endNeuron = randomNeuronExcl( startNeuron, numExPerModule );
+       
+       ExToEx( startNeuron+offset, endNeuron+offset) = 1;
+       
+    end
+    
 end
 
-% TODO Exicitatory to Excitatory
+% For each connection, rewire if needed according to input probability
+for i = 1 : numExTotal
+    for j = 1 : numExTotal
+        
+       if ExToEx(i, j) == 1; 
+           
+           if rand() < P
+               ExToEx(i, j) = 0;
+               newModule = randomModuleExcl( mod( i, numExPerModule ), numExModules );
+               newNeuron = randi( numExPerModule );
+               ExToEx(i, ((newModule*numExPerModule) + newNeuron) ) = 1;
+           end
+           
+       end
+       
+    end
+end
 
-% TODO Exicitatory to Inhibitory
-
-% TODO Inhibitory to Excitatory
-
-% TODO Inhibitory to Inhibitory
 
 
+end
+
+% Function generates random module between 0 and 7 excluding the input
+% module
+function randMod = randomModuleExcl( module, numModules )
+
+randMod = module;
+
+while randMod == module
+    randMod = randi( numModules ) - 1;
+end
+
+end
 
 
+% Generates a random neuron between 1 and numNeurons excluding currNeuron
+function randNeuron = randomNeuronExcl( currNeuron, numNeurons )
 
+randNeuron = currNeuron;
+
+while randNeuron == currNeuron
+    randNeuron = randi( numNeurons );
+end
 
 end
 
