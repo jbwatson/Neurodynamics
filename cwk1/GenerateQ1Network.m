@@ -8,6 +8,7 @@ numExTotal = numExModules * numExPerModule;
 
 numInModules = 1;
 numInPerModule = 200;
+numInTotal = numInPerModule * numInModules;
 
 
 % Generate Connection Matrix for Excitatory->Excitatory connections
@@ -45,6 +46,40 @@ for i = 1 : numExTotal
        end
        
     end
+end
+
+
+% Excitatory to Inhibitory 
+
+ExToIn = zeros(numExTotal, numInTotal);
+
+for i = 1 : numInTotal
+   
+    connections = zeros(4);
+    randomModule = randi(numExModules);
+    
+    for j = 1 : 4
+       
+        randNeuron = randi( numNeurons );
+        
+        if j > 1
+           res = ismember(randNeuron,connections);
+           while res(0) == 0
+                randNeuron = randi( numNeurons );
+                res = ismember(randNeuron,connections);
+           end
+        end
+        connections(j) = randNeuron;
+    end
+    
+    offset = (randomModule - 1) * numExPerModule;
+    
+    for k = 1 : 4
+       
+        ExToIn( offset + connections(k), i) = 1;
+        
+    end
+    
 end
 
 
