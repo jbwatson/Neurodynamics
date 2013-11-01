@@ -10,7 +10,6 @@ numInModules = 1;
 numInPerModule = 200;
 numInTotal = numInPerModule * numInModules;
 
-
 % Generate Connection Matrix for Excitatory->Excitatory connections
 
 ExToEx = zeros(numExTotal,numExTotal);
@@ -20,11 +19,17 @@ for i = 0 : (numExModules - 1)
     
     offset = i * numExPerModule;
     
-    for j = 1 : 1000
+    j = 1;
+    
+    while j < numExEdgesPerModule
+        
        startNeuron = randi(numExPerModule); 
        endNeuron = randomNeuronExcl( startNeuron, numExPerModule );
        
-       ExToEx( startNeuron+offset, endNeuron+offset) = 1;
+       if ExToEx( startNeuron+offset, endNeuron+offset) ~= 1
+           ExToEx( startNeuron+offset, endNeuron+offset) = 1;
+           j = j+1;
+       end     
        
     end
     
@@ -76,7 +81,7 @@ for i = 1 : numInTotal
     
     for k = 1 : 4
        
-        ExToIn( offset + connections(k), i) = 1;
+        ExToIn( offset + connections(k), i) = rand();
         
     end
     
