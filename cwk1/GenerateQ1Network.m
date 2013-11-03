@@ -1,4 +1,4 @@
-function ExToEx = GenerateQ1Network( P )
+function dummyReturn = GenerateQ1Network( P )
 
 % Parameters
 numExModules = 8;
@@ -10,67 +10,62 @@ numInModules = 1;
 numInPerModule = 200;
 numInTotal = numInPerModule * numInModules;
 
+ExLayer = 1;
+InLayer = 2;
+
 % Generate Connection Matrix for Excitatory->Excitatory connections
 
-ExToEx = zeros(numExTotal,numExTotal);
+layer{ExLayer}.S{ExLayer} = zeros(numExTotal,numExTotal);
 
 % For each module make 1000 random connections
-for i = 0 : (numExModules - 1)
-    
-    offset = i * numExPerModule;
-    
+for i = 0 : (numExModules - 1)   
+    offset = i * numExPerModule;   
     j = 1;
     
-    while j < numExEdgesPerModule
-        
+    while j < numExEdgesPerModule       
        startNeuron = randi(numExPerModule); 
        endNeuron = randomNeuronExcl( startNeuron, numExPerModule );
        
-       if ExToEx( startNeuron+offset, endNeuron+offset) ~= 1
-           ExToEx( startNeuron+offset, endNeuron+offset) = 1;
+       if layer{ExLayer}.S{ExLayer}( startNeuron+offset, endNeuron+offset) ~= 1
+           layer{ExLayer}.S{ExLayer}( startNeuron+offset, endNeuron+offset) = 1;
            j = j+1;
-       end     
-       
+       end          
     end
-    
 end
 
 % For each connection, rewire if needed according to input probability
 for i = 1 : numExTotal
     for j = 1 : numExTotal
         
-       if ExToEx(i, j) == 1; 
+       if layer{ExLayer}.S{ExLayer}(i, j) == 1; 
            
            if rand() < P
-               ExToEx(i, j) = 0;
+               layer{ExLayer}.S{ExLayer}(i, j) = 0;
                newModule = randomModuleExcl( mod( i, numExPerModule ), numExModules );
                newNeuron = randi( numExPerModule );
-               ExToEx(i, ((newModule*numExPerModule) + newNeuron) ) = 1;
-           end
-           
+               layer{ExLayer}.S{ExLayer}(i, ((newModule*numExPerModule) + newNeuron) ) = 1;
+           end  
        end
-       
     end
 end
 
 
-% Excitatory to Inhibitory 
+% Excitatory to Inhibitory - DON'T THINK THIS IS WORKING!!!!
 
-ExToIn = zeros(numExTotal, numInTotal);
+layer{InLayer}.S{ExLayer} = zeros(numInTotal, numExTotal);
 
 for i = 1 : numInTotal
    
     connections = zeros(4);
     randomModule = randi(numExModules);
     
-    for j = 1 : 4
-       
-        randNeuron = randi( numNeurons );
+    for j = 1 : 4      
+        randNeuron = randi( numExPerModule );
         
         if j > 1
            res = ismember(randNeuron,connections);
-           while res(0) == 0
-                randNeuron = randi( numNeurons );
+           while res(1) == 0
+                randNeuron = randi( numExPerModule );
                 res = ismember(randNeuron,connections);
            end
         end
@@ -79,16 +74,19 @@ for i = 1 : numInTotal
     
     offset = (randomModule - 1) * numExPerModule;
     
-    for k = 1 : 4
-       
-        ExToIn( offset + connections(k), i) = rand();
-        
+    for k = 1 : 4   
+        layer{InLayer}.S{ExLayer}( i, offset + connections(k)) = rand();
     end
     
 end
 
+% Inhibitory to Excitatory
+layer{ExLayer}.S{InLayer} = -1*rand(numExTotal, numInTotal);
+    
+% Inhibitory to Inhibitory
+layer{InLayer}.S{InLayer} = -1*rand(numInTotal, numInTotal);
 
-
+dummyReturn = layer{ExLayer}.S{ExLayer}; 
 end
 
 % Function generates random module between 0 and 7 excluding the input
