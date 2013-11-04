@@ -1,4 +1,4 @@
-function dummyReturn = GenerateQ1Network( P )
+function GenerateQ1Network( P )
 
 % Parameters
 numExModules = 8;
@@ -94,7 +94,8 @@ layer{InLayer}.S{InLayer} = -1*rand(numInTotal, numInTotal);
 layer{InLayer}.delay{InLayer} = ones(numInTotal, numInTotal);
 layer{InLayer}.factor{InLayer} = 1;
 
-dummyReturn = layer{InLayer}.S{ExLayer}; 
+save('Network.mat','layer');
+
 end
 
 % Function generates random module between 0 and 7 excluding the input
