@@ -13,9 +13,11 @@ numInTotal = numInPerModule * numInModules;
 ExLayer = 1;
 InLayer = 2;
 
-% Generate Connection Matrix for Excitatory->Excitatory connections
+% Excitatory to Excitatory
 
 layer{ExLayer}.S{ExLayer} = zeros(numExTotal,numExTotal);
+layer{ExLayer}.delay{ExLayer} = randi([0 20], numExTotal);
+layer{ExLayer}.factor{ExLayer} = 17;
 
 % For each module make 1000 random connections
 for i = 0 : (numExModules - 1)   
@@ -53,6 +55,8 @@ end
 % Excitatory to Inhibitory
 
 layer{InLayer}.S{ExLayer} = zeros(numInTotal, numExTotal);
+layer{InLayer}.delay{ExLayer} = ones(numInTotal, numExTotal);
+layer{InLayer}.factor{ExLayer} = 50;
 
 for i = 1 : numInTotal
    
@@ -82,9 +86,13 @@ end
 
 % Inhibitory to Excitatory
 layer{ExLayer}.S{InLayer} = -1*rand(numExTotal, numInTotal);
+layer{ExLayer}.delay{InLayer} = ones(numExTotal, numInTotal);
+layer{ExLayer}.factor{InLayer} = 2;
     
 % Inhibitory to Inhibitory
 layer{InLayer}.S{InLayer} = -1*rand(numInTotal, numInTotal);
+layer{InLayer}.delay{InLayer} = ones(numInTotal, numInTotal);
+layer{InLayer}.factor{InLayer} = 1;
 
 dummyReturn = layer{InLayer}.S{ExLayer}; 
 end
