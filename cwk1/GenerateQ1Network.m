@@ -50,21 +50,21 @@ for i = 1 : numExTotal
 end
 
 
-% Excitatory to Inhibitory - DON'T THINK THIS IS WORKING!!!!
+% Excitatory to Inhibitory
 
 layer{InLayer}.S{ExLayer} = zeros(numInTotal, numExTotal);
 
 for i = 1 : numInTotal
    
     connections = zeros(4);
-    randomModule = randi(numExModules);
-    
+    randomModule = randi(numExModules) - 1;
+   
     for j = 1 : 4      
         randNeuron = randi( numExPerModule );
         
         if j > 1
            res = ismember(randNeuron,connections);
-           while res(1) == 0
+           while res(1) == 1
                 randNeuron = randi( numExPerModule );
                 res = ismember(randNeuron,connections);
            end
@@ -72,10 +72,10 @@ for i = 1 : numInTotal
         connections(j) = randNeuron;
     end
     
-    offset = (randomModule - 1) * numExPerModule;
+    offset = randomModule * numExPerModule;  
     
-    for k = 1 : 4   
-        layer{InLayer}.S{ExLayer}( i, offset + connections(k)) = rand();
+    for k = 1 : 4 
+        layer{InLayer}.S{ExLayer}( i, offset + connections(k) ) = rand();
     end
     
 end
@@ -86,7 +86,7 @@ layer{ExLayer}.S{InLayer} = -1*rand(numExTotal, numInTotal);
 % Inhibitory to Inhibitory
 layer{InLayer}.S{InLayer} = -1*rand(numInTotal, numInTotal);
 
-dummyReturn = layer{ExLayer}.S{ExLayer}; 
+dummyReturn = layer{InLayer}.S{ExLayer}; 
 end
 
 % Function generates random module between 0 and 7 excluding the input
