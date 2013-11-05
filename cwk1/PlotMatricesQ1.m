@@ -1,4 +1,4 @@
-function PlotMatricesQ1()
+function PlotMatricesQ1(prob)
 
 load('Network.mat','layer');
 
@@ -9,7 +9,7 @@ ExToIn = layer{2}.S{1};
 
 SetColorMap();
 
-figure(1)
+fig = figure(1);
 clf
 
 subplot(2,2,1)
@@ -21,14 +21,16 @@ imagesc(ExToIn);
 title('Excitatory to Inhibitory');
 
 subplot(2,2,3)
-imagesc(InToEx);
+imagesc(-InToEx);
 title('Inhibitory to Excitatory');
 
 subplot(2,2,4)
-imagesc(InToIn);
+imagesc(-InToIn);
 title('Inhibitory to Inhibitory');
 
 drawnow
+
+saveas(fig, ['Q1a-prob', num2str(prob), '.fig'], 'fig' );
 
 
 end
