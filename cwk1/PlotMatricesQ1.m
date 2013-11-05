@@ -35,16 +35,9 @@ end
 
 function SetColorMap()
 
-map = colormap(gray);
+colorMap = zeros(64,3);
+colorMap(1,:) = [1,1,1];
 
-for i = 1:(length(map) / 2)
-    temp = map(i,:);
-    opposite = length(map) - i + 1;
-    map(i,:) = map(opposite , :);
-    map(opposite,:) = temp;    
-end
-
-colormap(map);
-
+colormap(colorMap);
 end
 
