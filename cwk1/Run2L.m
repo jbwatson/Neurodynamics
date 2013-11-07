@@ -1,4 +1,4 @@
-function Run2L(prob)
+function Run2L(prob,simTime)
 % Simulates two layers (imported from saved file) of Izhikevich neurons
 
 
@@ -12,7 +12,7 @@ M2 = layer{2}.columns;
 
 Dmax = 21; % maximum propagation delay
 
-Tmax = 1000; % simulation time
+Tmax = simTime; % simulation time
 
 Ib = 0; % base current
 
@@ -101,7 +101,7 @@ fig3 = figure(3);
 clf
 shiftSize = 20;
 windowSize = 50;
-numShifts = 1000/shiftSize;
+numShifts = simTime/shiftSize;
 buckets = zeros(8, numShifts);
 
 for b = 1:numShifts
@@ -127,7 +127,7 @@ for module=1:8
 end
 
 xlabel('Time (ms)')
-set(gca, 'XTickLabel', [0:numShifts*2:1000]);
+set(gca, 'XTickLabel', [0:numShifts*2:simTime]);
 ylabel('Mean Firing Rate')
 title('Module mean firing rates')
 
