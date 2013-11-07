@@ -42,32 +42,41 @@ for i = 0 : (numExModules - 1)
     offset = i * numExPerModule;   
     j = 1;
     
-    while j < numExEdgesPerModule       
-       startNeuron = randi(numExPerModule); 
-       endNeuron = randomNeuronExcl( startNeuron, numExPerModule );
+    while j < numExEdgesPerModule
+        
+        startNeuron = randi(numExPerModule); 
+        
+       if( rand() < P )
+           newModule = randomModuleExcl(i, numExModules);
+           newNeuron = randi( numExPerModule );
+           layer{ExLayer}.S{ExLayer}(startNeuron+offset, ((newModule*numExPerModule) + newNeuron) ) = 1;     
+       else
+           endNeuron = randomNeuronExcl( startNeuron, numExPerModule );
        
-       if (layer{ExLayer}.S{ExLayer}( startNeuron+offset, endNeuron+offset) ~= 1) 
-           layer{ExLayer}.S{ExLayer}( startNeuron+offset, endNeuron+offset) = 1;
-           j = j+1;
-       end          
+           if (layer{ExLayer}.S{ExLayer}( startNeuron+offset, endNeuron+offset) ~= 1) 
+               layer{ExLayer}.S{ExLayer}( startNeuron+offset, endNeuron+offset) = 1;
+               j = j+1;
+           end
+       end
+                 
     end
 end
 
 % For each connection, rewire if needed according to input probability
-for i = 1 : numExTotal
-    for j = 1 : numExTotal
+%for i = 1 : numExTotal
+%    for j = 1 : numExTotal
         
-       if layer{ExLayer}.S{ExLayer}(i, j) == 1; 
+%       if layer{ExLayer}.S{ExLayer}(i, j) == 1; 
            
-           if rand() < P
-               layer{ExLayer}.S{ExLayer}(i, j) = 0;
-               newModule = randomModuleExcl( mod( i, numExPerModule ), numExModules );
-               newNeuron = randi( numExPerModule );
-               layer{ExLayer}.S{ExLayer}(i, ((newModule*numExPerModule) + newNeuron) ) = 1;
-           end  
-       end
-    end
-end
+%           if rand() < P
+%               layer{ExLayer}.S{ExLayer}(i, j) = 0;
+%               newModule = randomModuleExcl( mod( i, numExPerModule ), numExModules );
+%               newNeuron = randi( numExPerModule );
+%               layer{ExLayer}.S{ExLayer}(i, ((newModule*numExPerModule) + newNeuron) ) = 1;
+%           end  
+%       end
+%    end
+%end
 
 
 % Excitatory to Inhibitory

@@ -30,7 +30,7 @@ end
 for t = 1:Tmax
    
    % Display time every 50ms
-   if mod(t,50) == 0
+   if mod(t,10) == 0
       t
    end
    
