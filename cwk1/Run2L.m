@@ -97,31 +97,65 @@ set(gca,'YDir','reverse')
 title('Population 2 firings')
 
 % Mean firing rate plot
+%fig3 = figure(3);
+%clf
+%shiftSize = 20;
+%windowSize = 50;
+%numShifts = 1000/shiftSize;
+%moduleTotals = zeros(8, numShifts);
+
+
+%for shift=0:(numShifts-1)
+%    for firing=1:length(firings1)
+%        offset = (shift*shiftSize) + 1;
+%        t = firings1(firing, 1);
+%        if ismember(t, offset:(offset + shiftSize))
+%           neuron = firings1(firing,2);
+%           moduleTotals(ceil(neuron/100), shift + 1) = moduleTotals(ceil(neuron/100), shift + 1) + 1;
+%        end
+%    end
+%end
+
+%for module=1:8
+%    for i = 1:numShifts
+%       moduleTotals(module, i) =  moduleTotals(module, i) / windowSize;
+%    end
+%    plot(1:numShifts, moduleTotals((module-1)*numShifts+1 : module*numShifts))
+%    hold all
+%end
+
 fig3 = figure(3);
 clf
 shiftSize = 20;
+windowSize = 50;
 numShifts = 1000/shiftSize;
-moduleTotals = zeros(8, numShifts);
+buckets = zeros(8, numShifts);
 
-
-for shift=0:(numShifts-1)
-    for firing=1:length(firings1)
-        offset = (shift*shiftSize) + 1;
-        t = firings1(firing, 1);
-        if ismember(t, offset:(offset + shiftSize))
-           neuron = firings1(firing,2);
-           moduleTotals(ceil(neuron/100), shift + 1) = moduleTotals(ceil(neuron/100), shift + 1) + 1;
+for b = 1:numShifts
+    for f = 1:length(firings1)
+        fire = firings1(f, 2);
+        if (firings1(f) > (b-1)*shiftSize)
+            if (firings1(f) <= (b-1)*shiftSize+windowSize)
+                buckets(floor((fire-1)/100)+1, b) = buckets(floor((fire-1)/100)+1, b)+1;
+            else
+                break;
+            end
         end
     end
 end
 
 for module=1:8
-    plot(1:numShifts, moduleTotals((module-1)*numShifts+1 : module*numShifts))
+    for b = 1:numShifts
+        buckets(module, b) = buckets(module, b)/windowSize;
+    end
+    plot(1:numShifts, buckets(module, :))
     hold all
+   
 end
+
 xlabel('Time (ms)')
 set(gca, 'XTickLabel', [0:numShifts*2:1000]);
-ylabel('Firings (Hz)')
+ylabel('Mean Firing Rate')
 title('Module mean firing rates')
 
 drawnow
