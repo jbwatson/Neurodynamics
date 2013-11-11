@@ -21,6 +21,7 @@ layer{ExLayer}.a = 0.02*ones(numExTotal,1);
 layer{ExLayer}.b = 0.2*ones(numExTotal,1);
 layer{ExLayer}.c = -65+15*r.^2;
 layer{ExLayer}.d = 8-6*r.^2;
+layer{ExLayer}.prob = P;
 
 % Layer 2 (In)
 r = rand(numInTotal,1);
