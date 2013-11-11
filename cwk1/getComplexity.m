@@ -42,9 +42,9 @@ end
 function[ret] = entropy(val)
 tpe = (2*pi*exp(1));
 s = size(val);
-s1 = s(2)
+s1 = s(1)
 lt = log(tpe)
-cv = cov(val);
+cv = cov(val');
 dcv = det(cv)
 if dcv <= 0
     val

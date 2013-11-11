@@ -4,11 +4,13 @@ function rates = DownsampledFiringRates()
     windowSize = 50;
     numShifts = 60000/shiftSize;
     buckets = zeros(8, numShifts);
+    numModels = 20;
     
-    rates = zeros(1, 8,3000);
+    rates = zeros(numModels, 8,3000);
 
-    i = 1;
-       
+    
+    for i = 1:numModels;
+        
         i
         
         model = load(['Q2Network-', int2str(i), '.mat']);

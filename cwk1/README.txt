@@ -15,4 +15,10 @@ The graphs are then:
 QUESTION 2
 ------------------
 
-...
+Question2 is run by calling GenerateQ2Complete().
+
+The 20 Networks have been created and modeled.
+
+The generated graph is Q2.fig
+
+WARNING: Due to an error in the 'getComplexity' function the grpah is wrong
