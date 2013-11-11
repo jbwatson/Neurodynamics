@@ -45,19 +45,12 @@ for i = 0 : (numExModules - 1)
     while j < numExEdgesPerModule
         
         startNeuron = randi(numExPerModule); 
-        
-       %if( rand() < P )
-       %    newModule = randomModuleExcl(i, numExModules);
-       %    newNeuron = randi( numExPerModule );
-       %    layer{ExLayer}.S{ExLayer}(startNeuron+offset, ((newModule*numExPerModule) + newNeuron) ) = 1;     
-       %else
-           endNeuron = randomNeuronExcl( startNeuron, numExPerModule );
+        endNeuron = randomNeuronExcl( startNeuron, numExPerModule );
        
-           if (layer{ExLayer}.S{ExLayer}( startNeuron+offset, endNeuron+offset) ~= 1) 
-               layer{ExLayer}.S{ExLayer}( startNeuron+offset, endNeuron+offset) = 1;
-               j = j+1;
-           end
-       %end
+        if (layer{ExLayer}.S{ExLayer}( startNeuron+offset, endNeuron+offset) ~= 1) 
+            layer{ExLayer}.S{ExLayer}( startNeuron+offset, endNeuron+offset) = 1;
+            j = j+1;
+        end
                  
     end
 end
