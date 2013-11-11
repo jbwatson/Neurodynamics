@@ -5,9 +5,9 @@ function rates = DownsampledFiringRates()
     numShifts = 60000/shiftSize;
     buckets = zeros(8, numShifts);
     
-    rates = zeros(20,8,3000);
+    rates = zeros(1, 8,3000);
 
-    for i = 1:20
+    i = 1;
        
         i
         
@@ -36,6 +36,6 @@ function rates = DownsampledFiringRates()
             
         end
         
-    end
+    
 
 end
